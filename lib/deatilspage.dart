@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:loginapipostmethord/loginpage.dart';
 import 'package:loginapipostmethord/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:loginapipostmethord/widgets/buttons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Detailspage extends StatefulWidget {
   String token;
@@ -262,9 +264,13 @@ class _DetailspageState extends State<Detailspage> {
                     ),
                     SizedBox(height: 30),
                     Buttons(
-                        buttonclik: () {
-                          Navigator.pop( context);
-                          print(widget.token);
+                        buttonclik: () async{
+
+
+                          SharedPreferences preferncelogout= await SharedPreferences.getInstance();
+
+                            preferncelogout.clear();
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Loginpage()), (route) => false);
                         },
                         decoration: BoxDecoration(color: Colors.white),
                         buttonleftmatgin: 100,

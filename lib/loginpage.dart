@@ -18,6 +18,8 @@ class Loginpage extends StatefulWidget {
 
 class _LoginpageState extends State<Loginpage> {
   ApiClient apiClient = ApiClient();
+  int? inttoken;
+  int? intloginstatus;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController Emailcontoler = TextEditingController();
@@ -58,24 +60,52 @@ class _LoginpageState extends State<Loginpage> {
                   controller: Passwordcontroler,
                 ),
                 Buttons(
-                    buttonclik: () {
-                      // setState(() {
-                      //   apiClient.loginuser({
-                      //     "username": Emailcontoler.text,
-                      //     "password": Passwordcontroler.text,
-                      //
-                      //   },);
-                      //
-                      //
-                      // });
-                      // if(Emailcontoler.text==''||Passwordcontroler.text==""){
-                      //   Fluttertoast.showToast(msg: 'Enter values');
-                      // }else{
-                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => Detailspage(token: '116'),));
-                      // }
-                      // Navigator.push(context, MaterialPageRoute(builder: (context) => Detailspage(token: '113'),));
+                    buttonclik: () async {
+                      apiClient.loginuser(
+                        {
+                          "username": Emailcontoler.text,
+                          "password": Passwordcontroler.text,
+                        },
+                      );
 
-                      loginuser();
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+
+                      setState(() {
+                        inttoken = (prefs.getInt('logintoken' ?? ""));
+                        intloginstatus = prefs.getInt('losginestsus' ?? "");
+                        print(inttoken);
+                        print(intloginstatus);
+                      });
+
+                      // if (Emailcontoler.text == '' ||
+                      //     Passwordcontroler.text == "") {
+                      //   Fluttertoast.showToast(msg: 'Enter values');
+                      // } else {
+                      //   Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => Detailspage(token: inttoken.toString()),
+                      //       ));
+                      // }
+                        // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => Detailspage(token: inttoken.toString()),
+                      //     ));
+                      if (Emailcontoler.text == '' ||
+                          Passwordcontroler.text == "" ||
+                          intloginstatus == 0) {
+                        Fluttertoast.showToast(msg: 'enter value ');
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Detailspage(token: inttoken.toString()),
+                            ));
+                      }
+                      // loginuser();
                     },
                     buttonleftmatgin: 50,
                     buttonrightmargin: 50,
@@ -92,26 +122,26 @@ class _LoginpageState extends State<Loginpage> {
     );
   }
 
-  Future loginuser() async {
-    var data = {
-      "username": Emailcontoler.text,
-      "password": Passwordcontroler.text,
-    };
-    var uri = 'https://maitexa.in/water-delivery-api/api/login';
-    var responce = await http.post(Uri.parse(uri), body: data);
-    var body = jsonDecode(responce.body);
-    print(body);
-    print(body['success']);
-    var token = body['loginid'];
-    if (body['success'] == 1) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Detailspage(token: token.toString()),
-          ));
-      print('fdxfgd');
-    } else {
-      Fluttertoast.showToast(msg: 'enter currect value');
-    }
-  }
+  // Future loginuser() async {
+  //   var data = {
+  //     "username": Emailcontoler.text,
+  //     "password": Passwordcontroler.text,
+  //   };
+  //   var uri = 'https://maitexa.in/water-delivery-api/api/login';
+  //   var responce = await http.post(Uri.parse(uri), body: data);
+  //   var body = jsonDecode(responce.body);
+  //   print(body);
+  //   print(body['success']);
+  //   var token = body['loginid'];
+  //   if (body['success'] == 1) {
+  //     Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => Detailspage(token: token.toString()),
+  //         ));
+  //     print('fdxfgd');
+  //   } else {
+  //     Fluttertoast.showToast(msg: 'enter currect value');
+  //   }
+  // }
 }
